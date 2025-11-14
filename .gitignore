@@ -1,0 +1,6 @@
+.venv/
+.idea/
+*.db
+node_modules/
+.env
+.gitignore
