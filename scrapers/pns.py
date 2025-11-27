@@ -8,7 +8,7 @@ import json
 from typing import List, Optional
 from bs4 import BeautifulSoup
 
-from base import BaseScraper, Product, DatabaseManager
+from base import BaseScraper, Product, FirebaseManager
 
 logger = logging.getLogger(__name__)
 
@@ -186,15 +186,10 @@ class PNSScraper(BaseScraper):
 
 def main():
     """Main execution function"""
-    db_path = 'products.db'
-    db = DatabaseManager(db_path)
+    db = FirebaseManager()
     scraper = None
 
     try:
-        # Initialize database
-        db.connect()
-        db.create_tables()
-
         # Initialize scraper
         scraper = PNSScraper()
 
@@ -210,11 +205,11 @@ def main():
             logger.info(f"Discounted Products: {stats.get('discounted_products', 0)}")
             logger.info(f"Average Price: HKD {stats.get('average_price', 0)}")
 
-            logger.info("\\nTop Brands:")
+            logger.info("\nTop Brands:")
             for brand, count in stats.get('top_brands', []):
                 logger.info(f"  {brand}: {count} products")
 
-            logger.info("\\nTop Categories:")
+            logger.info("\nTop Categories:")
             for cat, count in stats.get('top_categories', []):
                 logger.info(f"  {cat}: {count} products")
 
@@ -230,6 +225,7 @@ def main():
         if scraper:
             scraper.close()
         db.close()
+
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ import re
 from typing import List, Optional
 from bs4 import BeautifulSoup
 
-from base import BaseScraper, Product, DatabaseManager
+from base import BaseScraper, Product, FirebaseManager
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +15,8 @@ class MarksAndSpencerHKScraper(BaseScraper):
         super().__init__('https://www.marksandspencer.hk', use_selenium=True)
         self.food_categories = [
             '/en/food/category/frozen-food',
-            '/en/food/category/drinks',
-            '/en/food/category/food-cupboard/grains-pasta'
+            # '/en/food/category/drinks',
+            # '/en/food/category/food-cupboard/grains-pasta'
         ]
 
     def get_product_urls(self) -> List[str]:
@@ -241,15 +241,10 @@ class MarksAndSpencerHKScraper(BaseScraper):
 
 def main():
     """Main execution function"""
-    db_path = 'products.db'
-    db = DatabaseManager(db_path)
+    db = FirebaseManager()
     scraper = None
 
     try:
-        # Initialize database
-        db.connect()
-        db.create_tables()
-
         # Initialize scraper
         scraper = MarksAndSpencerHKScraper()
 
